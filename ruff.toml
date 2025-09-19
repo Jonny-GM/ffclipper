@@ -1,0 +1,25 @@
+line-length = 120
+
+[lint]
+extend-select = ["ALL"]
+extend-ignore = ["TRY003", "EM101", "EM102", "COM812", "D203", "D213", "D107"]
+
+[lint.extend-per-file-ignores]
+"tests/**/*.py" = [
+    # at least this three should be fine in tests:
+    "S101", # asserts allowed in tests...
+    "ARG", # Unused function args -> fixtures nevertheless are functionally relevant...
+    "FBT", # Don't care about booleans as positional arguments in tests, e.g. via @pytest.mark.parametrize()
+    # The below are debateable
+    "PLR2004", # Magic value used in comparison, ...
+    "S311", # Standard pseudo-random generators are not suitable for cryptographic purposes
+    # Ignore documentation requirements and broad ``pytest.raises`` without ``match``
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "PT011",
+    "ANN002",
+    "ANN003",
+]

@@ -1,0 +1,32 @@
+[project]
+name = "ffclipper"
+version = "0.1.0"
+description = "A lightweight frontend for ffmpeg (yet another one) intended specifically for convenient video clipping."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "cyclopts>=3.23.0",
+    "diskcache>=5.6.3",
+    "pydantic>=2.11.7",
+    "pyqt6>=6.9.1",
+    "pytimeparse2>=1.7.1",
+]
+
+[project.scripts]
+ffclipper = "ffclipper.cli:main"
+
+[project.gui-scripts]
+ffclipper-gui = "ffclipper.gui:run_gui"
+
+[tool.uv]
+package = true
+dev-dependencies = [
+    "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
+    "ruff>=0.12.11",
+    "ty>=0.0.1a19",
+]
+
+[build-system]
+requires = ["uv_build>=0.8.14,<0.9.0"]
+build-backend = "uv_build"

@@ -115,6 +115,29 @@ def test_run_conversion_full(source_file: Path) -> None:
     assert 1.9 <= duration <= 2.1
 
 
+def test_run_conversion_pads_odd_dimensions(odd_width_source_file: Path, tmp_path: Path) -> None:
+    """Pad odd source dimensions so encoding succeeds."""
+    output = tmp_path / "odd_clip.mp4"
+    opts = Options(
+        source=odd_width_source_file,
+        output=output,
+        video=VideoOptions(encoder=Encoder.X264),
+        audio=AudioOptions(include=False, downmix_to_stereo=False),
+    )
+    commands, result = executor.run_conversion(opts)
+    assert result.success
+    assert result.output == str(output)
+    final_cmd = commands[-1]
+    assert any("pad=ceil(iw/2)*2:ceil(ih/2)*2" in arg for arg in final_cmd)
+    ctx = RuntimeContext()
+    width = probe.query(ctx, str(output), "stream=width", "v:0", convert=lambda s: int(float(s)))
+    height = probe.query(ctx, str(output), "stream=height", "v:0", convert=lambda s: int(float(s)))
+    assert isinstance(width, int)
+    assert isinstance(height, int)
+    assert width % 2 == 0
+    assert height % 2 == 0
+
+
 def test_run_conversion_stream_copy(source_file: Path) -> None:
     """Stream copy audio and video and produce trimmed clip."""
     probe.clear_cache()

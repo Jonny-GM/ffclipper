@@ -45,6 +45,8 @@ TONEMAP_LIBPLACEBO: str = (
     "colorspace=bt709:color_trc=bt709:color_primaries=bt709"
 )  #: Filter chain for HDR to SDR tonemapping via ``libplacebo``.
 
+PAD_EVEN_DIMENSIONS: str = "pad=ceil(iw/2)*2:ceil(ih/2)*2:-1:-1"  #: Ensure even frame dimensions for encoders.
+
 COMMON_FLAGS: tuple[str, ...] = PIX_FMT  #: Flags applied to all encoders.
 ENCODER_FLAGS: dict[Encoder, tuple[str, ...]] = {
     Encoder.X264: PRESET_SLOW + PROFILE_HIGH,
@@ -151,6 +153,7 @@ def filters(plan: ClipPlan) -> tuple[str, ...]:
         filters.append(subs.burn_filter(plan))
     if plan.opts.video.resolution and plan.opts.video.resolution.height is not None:
         filters.append(f"scale=-2:{plan.opts.video.resolution.height}")
+    filters.append(PAD_EVEN_DIMENSIONS)
     return tuple(filters)
 
 

@@ -91,3 +91,36 @@ def source_file(tmp_path: Path) -> Path:
         check=True,
     )
     return out
+
+
+@pytest.fixture
+def odd_width_source_file(tmp_path: Path) -> Path:
+    """Provide a VP8 WebM source with an odd frame width."""
+    ffmpeg = shutil.which("ffmpeg")
+    assert ffmpeg, "ffmpeg must be available in PATH for tests"
+    data_dir = tmp_path / "odd"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    out = data_dir / "odd.webm"
+    subprocess.run(  # noqa: S603
+        [
+            ffmpeg,
+            "-v",
+            "error",
+            "-f",
+            "lavfi",
+            "-i",
+            "color=s=578x562:d=2",
+            "-vf",
+            "crop=577:562",
+            "-c:v",
+            "libvpx",
+            "-pix_fmt",
+            "yuv420p",
+            "-b:v",
+            "1M",
+            "-y",
+            str(out),
+        ],
+        check=True,
+    )
+    return out

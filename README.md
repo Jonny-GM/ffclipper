@@ -22,6 +22,12 @@ Easily clip out a section from a source clip with sensible defaults, so you donâ
 uv tool install git+https://github.com/Jonny-GM/ffclipper
 ```
 
+3. To upgrade to a new version:
+
+```bash
+uv tool upgrade ffclipper
+```
+
 ## GUI
 
 Launch the graphical interface:

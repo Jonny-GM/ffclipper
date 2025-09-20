@@ -19,6 +19,12 @@ PASSTHROUGH: tuple[str, ...] = (
 )  #: Flags to keep timestamps stable when copying streams.
 
 
+DROP_CHAPTERS: tuple[str, ...] = (
+    "-map_chapters",
+    "-1",
+)  #: Remove inherited chapters when trimming to avoid incorrect metadata.
+
+
 def build(plan: ClipPlan, *, passthrough: bool) -> tuple[str, ...]:
     """Return container muxing args."""
     args: tuple[str, ...] = ()
@@ -40,6 +46,8 @@ def build(plan: ClipPlan, *, passthrough: bool) -> tuple[str, ...]:
             args = args + TAG_AVC1
         elif vid in {VideoCodec.HEVC.value, "h265"}:
             args = args + TAG_HVC1
+    if plan.need_trim:
+        args = args + DROP_CHAPTERS
     if passthrough:
         args = args + PASSTHROUGH
     return args

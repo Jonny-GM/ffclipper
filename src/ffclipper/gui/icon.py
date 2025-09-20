@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 from functools import lru_cache
-from typing import Iterable
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont, QFontDatabase, QFontMetrics, QIcon, QPainter, QPixmap
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 EMOJI_CLAPPER_BOARD = "\U0001f3ac"
 FALLBACK_TEXT = "FF"

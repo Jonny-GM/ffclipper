@@ -1,6 +1,6 @@
 [project]
 name = "ffclipper"
-version = "0.1.0"
+version = "0.1.1"
 description = "A lightweight frontend for ffmpeg (yet another one) intended specifically for convenient video clipping."
 readme = "README.md"
 requires-python = ">=3.13"

@@ -8,6 +8,8 @@ Easily clip out a section from a source clip with sensible defaults, so you donâ
 - Automatic hardware acceleration (NVENC), tonemapping and two-pass encoding to target a specific file size limit
 - Support for soft subtitles and burning into video
 
+Note: this project is not affiliated with ffmpeg
+
 ## Requirements
 
 1. Windows, Mac, or Linux

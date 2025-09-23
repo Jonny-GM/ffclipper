@@ -62,7 +62,7 @@ Create a clip from a source video.
 │ CONTAINER --container  Container format for the output file. [default: mp4] [choices: mp4, mkv, webm] [default: mp4]         │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Total Bitrate ──────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ TARGET-SIZE --target-size  Target max file size in megabytes when encoding. [default: 10]                            │
+│ TARGET-SIZE-MB --target-size-mb  Target max file size in megabytes when encoding. [default: 10]                            │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Time ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ TIME.START --time.start        Start timestamp for the clip. Examples: '90s', '1m20s', '00:01:30'.                           │

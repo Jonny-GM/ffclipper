@@ -37,7 +37,7 @@ Launch the graphical interface:
 ```bash
 ffclipper-gui
 ```
-![Screenshot](src/ffclipper/gui/screenshots/Screenshot_v010.png)
+![Screenshot](src/ffclipper/gui/screenshots/Screenshot_v011.png)
 
 ## CLI usage
 

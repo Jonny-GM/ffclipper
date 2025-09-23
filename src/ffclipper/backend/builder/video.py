@@ -121,8 +121,8 @@ def _raw_bitrate(plan: ClipPlan, secs: float, reserve_factor: float) -> int:
     """Compute raw video bitrate budget in kbps (can be <= 0)."""
     if secs <= 0:
         raise ValueError("Duration must be greater than 0")
-    target_size = plan.opts.target_size or 0
-    max_size = int(target_size * 1024 * 1024 * reserve_factor)
+    target_size_mb = plan.opts.target_size_mb or 0
+    max_size = int(target_size_mb * 1024 * 1024 * reserve_factor)
     audio_kbps = _audio_budget_kbps(plan)
     return int((max_size * 8) / (secs * 1000) - audio_kbps)
 
@@ -165,13 +165,13 @@ def encode(plan: ClipPlan, secs: float, *, pass_num: int | None = None, stats_id
         raise ValueError("encoder not set")
     reserve = RESERVE_BY_ENCODER[encoder]
     raw_kbps = _raw_bitrate(plan, secs, reserve)
-    if opts.target_size is not None and raw_kbps <= 0:
+    if opts.target_size_mb is not None and raw_kbps <= 0:
         # Warn to the status callback (if any) and raise a clear error early.
         audio_kbps = _audio_budget_kbps(plan)
         msg = (
             "Target size leaves no bitrate budget for video "
-            f"(audio ~= {audio_kbps} kbps over {secs:.2f}s, target ~= {opts.target_size} MB). "
-            "Increase --target-size, lower --audio-kbps, or avoid audio copy."
+            f"(audio ~= {audio_kbps} kbps over {secs:.2f}s, target ~= {opts.target_size_mb} MB). "
+            "Increase --target-size-mb, lower --audio-kbps, or avoid audio copy."
         )
         emit_status(msg, status_callback=plan.ctx.status_callback)
         raise ValueError("No video bitrate budget given current target size and audio settings")

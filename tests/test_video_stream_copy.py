@@ -14,12 +14,12 @@ def test_defaults_none_with_copy(source_file: Path) -> None:
     opts = Options(source=source_file, video=VideoOptions(copy=True))
     assert opts.video.encoder is None
     assert opts.video.resolution is None
-    assert opts.target_size is None
+    assert opts.target_size_mb is None
     with RuntimeContext() as ctx:
         plan = ClipPlan.from_options(opts, ctx)
     assert plan.opts.video.encoder is None
     assert plan.opts.video.resolution is None
-    assert plan.opts.target_size is None
+    assert plan.opts.target_size_mb is None
 
 
 def test_defaults_resolved_when_encoding(source_file: Path) -> None:
@@ -27,7 +27,7 @@ def test_defaults_resolved_when_encoding(source_file: Path) -> None:
     opts = Options(source=source_file)
     assert opts.video.encoder is Encoder.AUTO
     assert opts.video.resolution is Resolution.ORIGINAL
-    assert opts.target_size == DEFAULT_TARGET_SIZE_MB
+    assert opts.target_size_mb == DEFAULT_TARGET_SIZE_MB
     monkeypatch = pytest.MonkeyPatch()
     monkeypatch.setattr(plan_module, "available_encoders", lambda _ctx: {Encoder.X264})
     with RuntimeContext() as ctx:
@@ -35,7 +35,7 @@ def test_defaults_resolved_when_encoding(source_file: Path) -> None:
     monkeypatch.undo()
     assert plan.opts.video.encoder is Encoder.X264
     assert plan.opts.video.resolution is Resolution.ORIGINAL
-    assert plan.opts.target_size == DEFAULT_TARGET_SIZE_MB
+    assert plan.opts.target_size_mb == DEFAULT_TARGET_SIZE_MB
 
 
 def test_invalid_video_options(source_file: Path) -> None:

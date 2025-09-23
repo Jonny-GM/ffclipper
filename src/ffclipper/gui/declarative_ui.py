@@ -23,7 +23,7 @@ from PyQt6.QtWidgets import (
 )
 
 from ffclipper.gui.ui_helpers import NOT_NONE
-from ffclipper.models.annotations import EnableWhen
+from ffclipper.models.annotations import EnableWhen, FieldLabel
 from ffclipper.models.options import Options
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -251,6 +251,12 @@ class FieldConfig:
     @property
     def label(self) -> str:
         """Return a human-friendly label for the field name."""
+        override = next(
+            (extra.text for extra in self.extras if isinstance(extra, FieldLabel)),
+            None,
+        )
+        if override:
+            return override
         return _label(self.name)
 
     @property

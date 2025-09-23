@@ -10,3 +10,10 @@ class EnableWhen:
     key: str
     value: object = True
     not_none: bool = False
+
+
+@dataclass(frozen=True)
+class FieldLabel:
+    """GUI hint to override the display label for a field."""
+
+    text: str

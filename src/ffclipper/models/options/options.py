@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 from cyclopts import Parameter
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-from ffclipper.models.annotations import EnableWhen
+from ffclipper.models.annotations import EnableWhen, FieldLabel
 from ffclipper.models.types import AudioCodec, Container, Encoder, SubtitleBurnMethod
 from ffclipper.models.verbosity import Verbosity
 
@@ -54,14 +54,15 @@ class Options(BaseModel):
         DEFAULT_CONTAINER,
         description=f"Container format for the output file. [default: {DEFAULT_CONTAINER.value}]",
     )
-    target_size: Annotated[
+    target_size_mb: Annotated[
         int | None,
         Parameter(group=TOTAL_BITRATE_GROUP),
         EnableWhen("video.copy", value=False),
+        FieldLabel("Target Size (MB)"),
     ] = Field(
         None,
         gt=0,
-        description=(f"Approximate target file size in megabytes when encoding. [default: {DEFAULT_TARGET_SIZE_MB}]"),
+        description=(f"Target max file size in megabytes when encoding. [default: {DEFAULT_TARGET_SIZE_MB}]"),
     )
     time: TimeOptions = Field(default_factory=TimeOptions)
     audio: AudioOptions = Field(default_factory=AudioOptions)
@@ -172,8 +173,8 @@ class Options(BaseModel):
             if self.video.encoder not in {None, Encoder.AUTO}:
                 raise ValueError("encoder requires video encoding")
             # Global constraints influenced by video encoding
-            if self.target_size is not None:
-                raise ValueError("target_size requires video encoding")
+            if self.target_size_mb is not None:
+                raise ValueError("--target-size-mb requires video encoding")
             # Normalize: clear encoder when copying
             self.video.encoder = None
         return self
@@ -194,13 +195,13 @@ class Options(BaseModel):
         return self
 
     @model_validator(mode="after")
-    def apply_target_size_default(self) -> Options:
+    def apply_target_size_mb_default(self) -> Options:
         """Resolve target size defaults based on stream copy."""
         if self.video.copy:
-            if self.target_size is not None:
-                raise ValueError("target_size requires video encoding")
-        elif self.target_size is None:
-            self.target_size = DEFAULT_TARGET_SIZE_MB
+            if self.target_size_mb is not None:
+                raise ValueError("--target-size-mb requires video encoding")
+        elif self.target_size_mb is None:
+            self.target_size_mb = DEFAULT_TARGET_SIZE_MB
         return self
 
     @model_validator(mode="after")
@@ -331,7 +332,7 @@ class Options(BaseModel):
             opts.audio.kbps = DEFAULT_AUDIO_KBPS
         # Target size (when encoding video)
         if not opts.video.copy:
-            opts.target_size = DEFAULT_TARGET_SIZE_MB
+            opts.target_size_mb = DEFAULT_TARGET_SIZE_MB
         # Subtitles UI helpers
         if opts.subtitles.burn is None:
             opts.subtitles.burn_method = SubtitleBurnMethod.AUTO

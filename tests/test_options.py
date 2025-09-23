@@ -89,13 +89,13 @@ def test_validate_stream_copy_constraints_codec(source_file: Path) -> None:
         )
 
 
-def test_validate_stream_copy_constraints_target_size(source_file: Path) -> None:
+def test_validate_stream_copy_constraints_target_size_mb(source_file: Path) -> None:
     """Reject target size control when stream copying video."""
     with pytest.raises(ValueError):
         Options(
             source=source_file,
             video=VideoOptions(copy=True),
-            target_size=20,
+            target_size_mb=20,
         )
 
 

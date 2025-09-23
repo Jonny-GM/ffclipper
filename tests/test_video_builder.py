@@ -32,21 +32,21 @@ def test_encode_applies_rate_multipliers(source_file: Path) -> None:
     )
 
 
-def test_bitrate_reserves_target_size_buffer(source_file: Path) -> None:
+def test_bitrate_reserves_target_size_mb_buffer(source_file: Path) -> None:
     """Bitrate calculation reserves space for container overhead."""
     opts = Options(
         source=source_file,
         audio=AudioOptions(include=False, downmix_to_stereo=False),
-        target_size=10,
+        target_size_mb=10,
     )
     plan = ClipPlan.from_options(opts, RuntimeContext())
     args = video.encode(plan, VIDEO_DURATION_SEC)
     bitrate_idx = args.index(video.BITRATE[0])
     kbps = int(args[bitrate_idx + 1][:-1])
-    assert opts.target_size is not None
+    assert opts.target_size_mb is not None
     enc = plan.opts.video.encoder or Encoder.X264
     reserve = video.RESERVE_BY_ENCODER[enc]
-    max_size = int(opts.target_size * 1024 * 1024 * reserve)
+    max_size = int(opts.target_size_mb * 1024 * 1024 * reserve)
     expected = max(100, int((max_size * 8) / (VIDEO_DURATION_SEC * 1000)))
     assert kbps == expected
 
